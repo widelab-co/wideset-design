@@ -1,0 +1,4 @@
+interface:
+  display_name: 'Wideset Design Lab'
+  short_description: 'Designer workflow in the wideset-design fork'
+  default_prompt: 'Use $wideset-design-lab before changing anything: sync the fork with gh repo sync, one design/<topic> branch and PR per topic in widelab-co/wideset-design, visual changes only, atomic commits, review loop before every push, the PR description as the handoff, ready-for-port and @coderabbitai review at the end.'
