@@ -14,7 +14,7 @@ You need Git, the GitHub CLI (`gh`) and Node 22 with pnpm (see the Wideset
 gh auth login -s workflow        # already logged in? gh auth refresh -s workflow
 gh repo clone widelab-co/wideset-design
 cd wideset-design
-pnpm install                     # also installs the Git hooks
+pnpm install
 ```
 
 The `workflow` scope lets your agent update the fork when Wideset changes its CI files. Without

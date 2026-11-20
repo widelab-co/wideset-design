@@ -204,6 +204,7 @@ One commit per change, in an order where every prefix of the list is a working s
 another one builds on comes first. Before each commit:
 
 ```bash
+pnpm format       # Prettier and ESLint fixes; the Git hooks may not run in this checkout
 pnpm typecheck
 pnpm test
 ```
@@ -227,8 +228,7 @@ Now: the pill slides (fast duration, smooth-out easing).
 Was: the active tab swapped colour instantly.
 ```
 
-The pre-commit hook formats staged files. A commit is done when it holds one change, the checks
-pass, and its body has "Now" and "Was".
+A commit is done when it holds one change, the checks pass, and its body has "Now" and "Was".
 
 ## 5. Review loop before every push
 
@@ -247,14 +247,15 @@ Before each push, review what the push adds: the whole branch before the first p
    lines and the designer hears about it.
 
 The loop is done when a round has no blocking finding inside the scope, or after round three.
-Then push:
+Then run the gate and push. CI is off in the fork and the Git hooks may not run, so these commands
+are the only check before the dev team sees the branch:
 
 ```bash
+pnpm lint && pnpm prettier && pnpm typecheck && pnpm test
 git push -u origin "$branch"
 ```
 
-The pre-push hook runs lint, Prettier and the tests; `design/*` branches are exempt from its
-changeset check. If the push is refused for lack of access, stop and ask the designer to get write
+If the pre-push hook does run, `design/*` branches are exempt from its changeset check. If the push is refused for lack of access, stop and ask the designer to get write
 access from a developer.
 
 ## 6. The pull request is the handoff
