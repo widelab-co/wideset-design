@@ -85,7 +85,7 @@ export const Default: Story = {
     docs: {
       description: {
         story:
-          'Interactive playground — hover the button, then use the controls panel to change variant, arrow, and delay.',
+          'Interactive playground — hover or focus the button, then use the controls panel to change variant, arrow, and delay.',
       },
     },
   },
