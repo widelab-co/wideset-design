@@ -208,7 +208,10 @@ classes. Animate `transform` and `opacity`, not layout properties. A timing with
 ## 4. Commit
 
 One commit per change, in an order where every prefix of the list is a working state: a change
-another one builds on comes first. Before each commit:
+another one builds on comes first. Work one change at a time and commit it before starting the
+next, so the working tree and the index hold only this change. `git status --short` before staging
+lists only its files; if it lists others, ask the designer whether they belong to this change or
+come first, rather than splitting hunks. Before each commit:
 
 ```bash
 git add -- <files of this change>
