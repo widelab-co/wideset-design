@@ -211,15 +211,16 @@ One commit per change, in an order where every prefix of the list is a working s
 another one builds on comes first. Before each commit:
 
 ```bash
-git add -A
-git diff --cached --name-only --diff-filter=d | xargs pnpm exec prettier --write --ignore-unknown
-git add -A
+git add -- <files of this change>
+git diff --cached --name-only --diff-filter=d -z | xargs -0 pnpm exec prettier --write --ignore-unknown
+git diff --cached --name-only --diff-filter=d -z | xargs -0 git add --
 pnpm typecheck
 pnpm test
 ```
 
-The first three lines stage your change and format only the files in it (the Git hooks that would
-do it may not run in this checkout). Leave files outside the topic untouched.
+The first three lines stage only the files of this change, format them and stage the formatted
+version (the Git hooks that would do it may not run in this checkout). Leave files outside the
+topic unstaged and untouched.
 
 If a snapshot fails only because of your intended visual change, update that file's snapshot (path
 relative to `packages/design-system/`) and commit it with the change:
@@ -354,19 +355,19 @@ When the branch does what the designer wanted, or has gone as far as the visual 
    Marking it ready asks the code owners for review: that is the dev team's signal.
 
 3. Wait for CodeRabbit. Its status check turns from pending to pass when the review is posted
-   (usually a few minutes):
+   (usually a few minutes). Check it every minute or two:
 
    ```bash
-   gh pr checks <number> -R widelab-co/wideset-design --watch
+   gh pr checks <number> -R widelab-co/wideset-design
    ```
 
-   If nothing arrives within 15 minutes, comment `@coderabbitai review` once more; if it still
-   does not come, tell the designer and go on. Then read everything it wrote: inline comments,
+   If it has not passed after 15 minutes, comment `@coderabbitai review` once more; if 15 more
+   minutes pass without it, tell the designer and go on. Then read everything it wrote: inline comments,
    review bodies (they hold nitpicks and "outside diff range" comments) and PR comments:
 
    ```bash
-   gh api repos/widelab-co/wideset-design/pulls/<number>/comments --jq '.[] | [.id, .in_reply_to_id, .user.login, .path, .line, .body] | @json'
-   gh api repos/widelab-co/wideset-design/pulls/<number>/reviews --jq '.[] | [.user.login, .state, .body] | @json'
+   gh api --paginate repos/widelab-co/wideset-design/pulls/<number>/comments --jq '.[] | [.id, .in_reply_to_id, .user.login, .path, .line, .body] | @json'
+   gh api --paginate repos/widelab-co/wideset-design/pulls/<number>/reviews --jq '.[] | [.user.login, .state, .body] | @json'
    gh pr view <number> -R widelab-co/wideset-design --comments
    ```
 
